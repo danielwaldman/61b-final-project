@@ -45,8 +45,19 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
-
-        TETile[][] finalWorldFrame = null;
+        String seed = "";
+        for (int i = 0; i < input.length(); i++) {
+            String temp = input.substring(i, i + 1);
+            if (!temp.equals("N")) {
+                if (!temp.equals("S")) {
+                    seed = seed + temp;
+                }
+            }
+        }
+        int seedInt = Integer.parseInt(seed);
+        TileWorld newWorld = new TileWorld(seedInt, ter);
+        newWorld.renderWorld();
+        TETile[][] finalWorldFrame = newWorld.getTiles();
         return finalWorldFrame;
     }
 }

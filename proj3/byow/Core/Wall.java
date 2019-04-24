@@ -44,11 +44,11 @@ public class Wall {
         } else {
             temp = new Point(startingx + ran, startingy);
         }
-        removeWallSeg(ran);
+        removeWallSeg(temp);
         return temp;
     }
 
-    public void removeWallSeg(int index) {
-        tiles.set(index, Tileset.FLOOR);
+    public void removeWallSeg(Point index) {
+        tileWorld.add(index, Tileset.FLOOR);
     }
 }

@@ -9,6 +9,10 @@ public class Point {
         y = starty;
     }
 
+    public String getDirec() {
+        return null;
+    }
+
     public int getX() {
         return x;
     }

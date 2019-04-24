@@ -1,5 +1,7 @@
 package byow.Core;
 
+import byow.TileEngine.Tileset;
+
 public class IndoorArea {
     private int xStart;
     private int yStart;
@@ -12,18 +14,25 @@ public class IndoorArea {
     private TileWorld tileWorld;
     private Point startPoint;
     private Point exitPoint;
+    private String direction;
 
     public IndoorArea(Point p, int length, int width, TileWorld tw) {
+        direction = p.getDirec();
         startPoint = p;
         xStart = startPoint.getX();
         yStart = startPoint.getY();
         xlength = length;
         ywidth = width;
         tileWorld = tw;
-        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public int[] getParams() {
+        int[] temp = {xStart, yStart, xlength, ywidth};
+        return temp;
     }
 
     private void breakWall() {
@@ -32,16 +41,16 @@ public class IndoorArea {
         switch(i)
         {
             case 0:
-                removedIndex = top.removeWallRandom();
+                removedIndex = new DirectedPoint(top.removeWallRandom(), "top");
                 break;
             case 1:
-                removedIndex = bottom.removeWallRandom();
+                removedIndex = new DirectedPoint(bottom.removeWallRandom(), "bottom");
                 break;
             case 2:
-                removedIndex = left.removeWallRandom();
+                removedIndex = new DirectedPoint(left.removeWallRandom(), "left");
                 break;
             case 3:
-                removedIndex = right.removeWallRandom();
+                removedIndex = new DirectedPoint(right.removeWallRandom(), "right");
                 break;
             default:
                 removedIndex = null;
@@ -52,5 +61,74 @@ public class IndoorArea {
     public Point getExitPoint() {
         breakWall();
         return exitPoint;
+    }
+
+    public void buildRight() {
+        for (int i = 0; i < xlength; i++) {
+            for(int j = 0; j < ywidth; j++) {
+                tileWorld.add(new Point(xStart + i, yStart + j), Tileset.FLOOR);
+            }
+        }
+        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
+        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
+        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+    }
+
+    public void buildLeft() {
+        for (int i = 0; i < xlength; i++) {
+            for(int j = 0; j < ywidth; j++) {
+                tileWorld.add(new Point(xStart - i, yStart + j), Tileset.FLOOR);
+            }
+        }
+        top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
+        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
+        left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
+        right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+    }
+
+    public void buildUp() {
+        for (int i = 0; i < xlength; i++) {
+            for(int j = 0; j < ywidth; j++) {
+                tileWorld.add(new Point(xStart + i, yStart + j), Tileset.FLOOR);
+            }
+        }
+        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
+        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
+        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+    }
+
+    public void buildDown() {
+        for (int i = 0; i < xlength; i++) {
+            for(int j = 0; j < ywidth; j++) {
+                tileWorld.add(new Point(xStart + i, yStart - j), Tileset.FLOOR);
+            }
+        }
+        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
+        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
+        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+    }
+
+    public void build(String d) {
+        if (d == null) {
+            d = "top";
+        }
+        switch(d)
+        {
+            case "top":
+                buildUp();
+                break;
+            case "bottom":
+                buildDown();
+                break;
+            case "left":
+                buildLeft();
+                break;
+            case "right":
+                buildRight();
+                break;
+        }
     }
 }
