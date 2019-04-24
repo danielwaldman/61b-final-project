@@ -27,11 +27,15 @@ public class Wall {
         }
         if (isVert) {
             for (int i = 0; i < len; i++) {
-                tw.add(new Point(startingx, startingy - i), Tileset.WALL);
+                if (!tileWorld.isTaken(startingx, startingy - i)) {
+                    tw.add(new Point(startingx, startingy - i), Tileset.WALL);
+                }
             }
         } else {
             for (int i = 0; i < len; i++) {
-                tw.add(new Point(startingx + i, startingy), Tileset.WALL);
+                if (!tileWorld.isTaken(startingx + i, startingy)) {
+                    tw.add(new Point(startingx + i, startingy), Tileset.WALL);
+                }
             }
         }
     }

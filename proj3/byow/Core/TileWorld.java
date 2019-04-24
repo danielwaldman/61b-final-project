@@ -19,7 +19,7 @@ public class TileWorld {
     public TileWorld(int seed, TERenderer te) {
         random = new Random(seed);
         width = RandomUtils.uniform(random, 100, 150);
-        height = RandomUtils.uniform(random, 100, 150);
+        height = RandomUtils.uniform(random, 80, 120);
         world = new TETile[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -30,7 +30,7 @@ public class TileWorld {
         rooms = new ArrayList<>();
         halls = new ArrayList<>();
         Point start = new Point(RandomUtils.uniform(random, height), RandomUtils.uniform(random, width));
-        createAreas(RandomUtils.uniform(random, 3, 10), start);
+        createAreas(10, start);
     }
 
     public void renderWorld() {
@@ -56,7 +56,7 @@ public class TileWorld {
                 System.out.println(Arrays.toString(temp.getParams()));
                 rooms.add(temp);
                 int ran = RandomUtils.uniform(random, rooms.size());
-                nextStartingPoint = rooms.get(ran).getExitPoint();
+                nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
             } else {
                 Hallway temp = null;
                 if (i % 4 == 1) {
@@ -68,9 +68,48 @@ public class TileWorld {
                 System.out.println(Arrays.toString(temp.getParams()));
                 halls.add(temp);
                 int ran = RandomUtils.uniform(random, halls.size());
-                nextStartingPoint = halls.get(ran).getExitPoint();
+                nextStartingPoint = adjustStart(halls.get(ran).getExitPoint());
             }
         }
+    }
+
+    public DirectedPoint adjustStart(Point dp) {
+        switch(dp.getDirec())
+        {
+            case "top":
+                return new DirectedPoint(dp.getX(), dp.getY() + 1, dp.getDirec());
+            case "bottom":
+                return new DirectedPoint(dp.getX(), dp.getY() - 1, dp.getDirec());
+            case "left":
+                return new DirectedPoint(dp.getX() - 1, dp.getY(), dp.getDirec());
+            case "right":
+                return new DirectedPoint(dp.getX() + 1, dp.getY(), dp.getDirec());
+        }
+        return new DirectedPoint(dp.getX(), dp.getY(), "top");
+    }
+    public boolean isTaken(int x, int y) {
+        if (world[x][y] != Tileset.NOTHING) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isOutofIndex(int x, int y) {
+        if (x > width || x < 0 || y > height || y < 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean canNotPlace(Point topRight, Point bottomLeft) {
+        for (int i = bottomLeft.getX(); i < topRight.getX(); i++) {
+            for (int j = bottomLeft.getY(); j < topRight.getY(); j++) {
+                if (isOutofIndex(i, j) || isTaken(i, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public TETile get(Point p) {
