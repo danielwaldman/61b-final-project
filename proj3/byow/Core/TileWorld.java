@@ -61,7 +61,9 @@ public class TileWorld {
     }
 
     public void add(Point p, TETile tile) {
-        world[p.getX()][p.getY()] = tile;
+        if (!isOutofIndex(p.getX(), p.getY())) {
+            world[p.getX()][p.getY()] = tile;
+        }
     }
 
     public void createAreas(int numAreas, Point beginning) {
