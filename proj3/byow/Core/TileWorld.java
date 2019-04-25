@@ -74,8 +74,8 @@ public class TileWorld {
             if (i % 2 == 0) {
                 Room temp = new Room(nextStartingPoint, RandomUtils.poisson(random, 5),
                         RandomUtils.poisson(random, 5), this);
-                System.out.print(temp.getDirection());
-                System.out.println(Arrays.toString(temp.getParams()));
+                //System.out.print(temp.getDirection());
+                //System.out.println(Arrays.toString(temp.getParams()));
                 rooms.add(temp);
                 int ran = RandomUtils.uniform(random, rooms.size());
                 nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
@@ -86,8 +86,8 @@ public class TileWorld {
                 } else {
                     temp = new Hallway(nextStartingPoint, RandomUtils.poisson(random, 5), 1, this);
                 }
-                System.out.print(temp.getDirection());
-                System.out.println(Arrays.toString(temp.getParams()));
+                //System.out.print(temp.getDirection());
+                //System.out.println(Arrays.toString(temp.getParams()));
                 halls.add(temp);
                 int ran = RandomUtils.uniform(random, halls.size());
                 nextStartingPoint = adjustStart(halls.get(ran).getExitPoint());
