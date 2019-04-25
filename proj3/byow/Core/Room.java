@@ -1,5 +1,4 @@
 package byow.Core;
-import byow.TileEngine.Tileset;
 
 
 public class Room extends IndoorArea {

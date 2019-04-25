@@ -2,7 +2,6 @@ package byow.Core;
 import java.util.ArrayList;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import byow.Core.RandomUtils;
 
 public class Wall {
     private boolean isVert;

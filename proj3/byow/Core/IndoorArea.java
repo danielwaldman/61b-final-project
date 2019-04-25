@@ -38,8 +38,7 @@ public class IndoorArea {
     private void breakWall() {
         int i = RandomUtils.uniform(tileWorld.getRandom(), 3);
         Point removedIndex;
-        switch(i)
-        {
+        switch (i) {
             case 0:
                 removedIndex = new DirectedPoint(top.removeWallRandom(), "top");
                 break;
@@ -66,7 +65,7 @@ public class IndoorArea {
     public void buildRightUp(int shift) {
         yStart = yStart - shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart + i, yStart + j)) {
                     tileWorld.add(new Point(xStart + i, yStart + j), Tileset.FLOOR);
                 }
@@ -81,7 +80,7 @@ public class IndoorArea {
     public void buildRightDown(int shift) {
         yStart = yStart - shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart + i, yStart - j)) {
                     tileWorld.add(new Point(xStart + i, yStart - j), Tileset.FLOOR);
                 }
@@ -96,7 +95,7 @@ public class IndoorArea {
     public void buildLeftUp(int shift) {
         yStart = yStart - shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart - i, yStart + j)) {
                     tileWorld.add(new Point(xStart - i, yStart + j), Tileset.FLOOR);
                 }
@@ -111,14 +110,15 @@ public class IndoorArea {
     public void buildLeftDown(int shift) {
         yStart = yStart - shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart - i, yStart - j)) {
                     tileWorld.add(new Point(xStart - i, yStart - j), Tileset.FLOOR);
                 }
             }
         }
         top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth), tileWorld);
+        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
+                tileWorld);
         left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
         right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
     }
@@ -126,7 +126,7 @@ public class IndoorArea {
     public void buildUpRight(int shift) {
         xStart = xStart + shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart + i, yStart + j)) {
                     tileWorld.add(new Point(xStart + i, yStart + j), Tileset.FLOOR);
                 }
@@ -141,7 +141,7 @@ public class IndoorArea {
     public void buildUpLeft(int shift) {
         xStart = xStart - shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart - i, yStart + j)) {
                     tileWorld.add(new Point(xStart - i, yStart + j), Tileset.FLOOR);
                 }
@@ -156,7 +156,7 @@ public class IndoorArea {
     public void buildDownRight(int shift) {
         xStart = xStart + shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart + i, yStart - j)) {
                     tileWorld.add(new Point(xStart + i, yStart - j), Tileset.FLOOR);
                 }
@@ -172,16 +172,53 @@ public class IndoorArea {
     public void buildDownLeft(int shift) {
         xStart = xStart - shift;
         for (int i = 0; i < xlength; i++) {
-            for(int j = 0; j < ywidth; j++) {
+            for (int j = 0; j < ywidth; j++) {
                 if (!tileWorld.isTaken(xStart - i, yStart - j)) {
                     tileWorld.add(new Point(xStart - i, yStart - j), Tileset.FLOOR);
                 }
             }
         }
         top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth), tileWorld);
+        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
+                tileWorld);
         left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
         right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+    }
+
+    void methodTop(int drr, Point dp, int buildvert) {
+        if (drr == 1) {
+            Point topRight = new Point(dp.getX() + xlength, dp.getY() + ywidth);
+            Point bottomLeft = new Point(dp.getX() - 1, dp.getY() - 1);
+            if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
+                buildUpRight(buildvert);
+            }
+            buildUpLeft(buildvert);
+        } else {
+            Point topRight = new Point(dp.getX() + 1, dp.getY() + ywidth);
+            Point bottomLeft = new Point(dp.getX() - xlength, dp.getY() - 1);
+            if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
+                buildUpLeft(buildvert);
+            }
+            buildUpRight(buildvert);
+        }
+    }
+
+    void methodBottom(int drr, Point dp, int buildvert) {
+        if (drr == 1) {
+            Point topRight = new Point(dp.getX() + xlength, dp.getY() + 1);
+            Point bottomLeft = new Point(dp.getX() - 1, dp.getY() - ywidth);
+            if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
+                buildDownRight(buildvert);
+            }
+            buildDownLeft(buildvert);
+        } else {
+            Point topRight = new Point(dp.getX() + 1, dp.getY() + 1);
+            Point bottomLeft = new Point(dp.getX() - xlength, dp.getY() - ywidth);
+            if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
+                buildDownLeft(buildvert);
+            }
+            buildDownRight(buildvert);
+        }
     }
 
     public void build(Point dp) {
@@ -198,66 +235,31 @@ public class IndoorArea {
             buildhoriz = 0;
         }
         int drr = RandomUtils.uniform(tileWorld.getRandom(), 1);
-        switch(d)
-        {
+        switch (d) {
             case "top":
-                if (drr == 1) {
-                    Point topRight = new Point(dp.getX() + xlength, dp.getY() + ywidth);
-                    Point bottomLeft = new Point(dp.getX() - 1, dp.getY() - 1);
-                    if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildUpRight(buildvert);
-                        break;
-                    }
-                    buildUpLeft(buildvert);
-                    break;
-                } else {
-                    Point topRight = new Point(dp.getX() + 1, dp.getY() + ywidth);
-                    Point bottomLeft = new Point(dp.getX() - xlength, dp.getY() - 1);
-                    if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildUpLeft(buildvert);
-                        break;
-                    }
-                    buildUpRight(buildvert);
-                    break;
-                }
+                methodTop(drr, dp, buildvert);
+                break;
             case "bottom":
-                if (drr == 1) {
-                    Point topRight = new Point(dp.getX() + xlength, dp.getY() + 1);
-                    Point bottomLeft = new Point(dp.getX() - 1, dp.getY() - ywidth);
-                    if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildDownRight(buildvert);
-                        break;
-                    }
-                    buildDownLeft(buildvert);
-                    break;
-                } else {
-                    Point topRight = new Point(dp.getX() + 1, dp.getY() + 1);
-                    Point bottomLeft = new Point(dp.getX() - xlength, dp.getY() - ywidth);
-                    if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildDownLeft(buildvert);
-                        break;
-                    }
-                    buildDownRight(buildvert);
-                    break;
-                }
+                methodBottom(drr, dp, buildvert);
+                break;
             case "left":
                 if (drr == 1) {
                     Point topRight = new Point(dp.getX() + 1, dp.getY() + ywidth);
                     Point bottomLeft = new Point(dp.getX() - xlength, dp.getY() - 1);
                     if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildLeftUp(buildvert);
+                        buildLeftUp(buildhoriz);
                         break;
                     }
-                    buildLeftDown(buildvert);
+                    buildLeftDown(buildhoriz);
                     break;
                 } else {
                     Point topRight = new Point(dp.getX() + 1, dp.getY() + 1);
                     Point bottomLeft = new Point(dp.getX() - xlength, dp.getY() - ywidth);
                     if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildLeftDown(buildvert);
+                        buildLeftDown(buildhoriz);
                         break;
                     }
-                    buildLeftUp(buildvert);
+                    buildLeftUp(buildhoriz);
                     break;
                 }
             case "right":
@@ -265,21 +267,23 @@ public class IndoorArea {
                     Point topRight = new Point(dp.getX() + xlength, dp.getY() + ywidth);
                     Point bottomLeft = new Point(dp.getX() - 1, dp.getY() - 1);
                     if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildRightUp(buildvert);
+                        buildRightUp(buildhoriz);
                         break;
                     }
-                    buildRightDown(buildvert);
+                    buildRightDown(buildhoriz);
                     break;
                 } else {
                     Point topRight = new Point(dp.getX() + xlength, dp.getY() + 1);
                     Point bottomLeft = new Point(dp.getX() - 1, dp.getY() - ywidth);
                     if (!tileWorld.canNotPlace(topRight, bottomLeft)) {
-                        buildRightDown(buildvert);
+                        buildRightDown(buildhoriz);
                         break;
                     }
-                    buildRightUp(buildvert);
+                    buildRightUp(buildhoriz);
                     break;
                 }
+            default:
+                break;
         }
     }
 }

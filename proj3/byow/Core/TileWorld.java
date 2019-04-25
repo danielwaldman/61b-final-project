@@ -8,7 +8,7 @@ import byow.TileEngine.Tileset;
 import java.util.Arrays;
 
 public class TileWorld {
-    private ArrayList<Room> rooms;//might not be necessary
+    private ArrayList<Room> rooms; //might not be necessary
     private ArrayList<Hallway> halls;
     private int width;
     private int height;
@@ -28,7 +28,8 @@ public class TileWorld {
         }
         rooms = new ArrayList<>();
         halls = new ArrayList<>();
-        Point start = new Point(RandomUtils.uniform(random, height), RandomUtils.uniform(random, width));
+        Point start = new Point(RandomUtils.uniform(random, height),
+                RandomUtils.uniform(random, width));
         createAreas(10, start);
     }
 
@@ -45,7 +46,8 @@ public class TileWorld {
         teRenderer = te;
         rooms = new ArrayList<>();
         halls = new ArrayList<>();
-        Point start = new Point(RandomUtils.uniform(random, height), RandomUtils.uniform(random, width));
+        Point start = new Point(RandomUtils.uniform(random, height),
+                RandomUtils.uniform(random, width));
         createAreas(10, start);
     }
 
@@ -68,7 +70,8 @@ public class TileWorld {
         Point nextStartingPoint = beginning;
         for (int i = 0; i < numAreas; i++) {
             if (i % 2 == 0) {
-                Room temp = new Room(nextStartingPoint, RandomUtils.poisson(random, 5), RandomUtils.poisson(random, 5), this);
+                Room temp = new Room(nextStartingPoint, RandomUtils.poisson(random, 5),
+                        RandomUtils.poisson(random, 5), this);
                 System.out.print(temp.getDirection());
                 System.out.println(Arrays.toString(temp.getParams()));
                 rooms.add(temp);
@@ -91,8 +94,7 @@ public class TileWorld {
     }
 
     public DirectedPoint adjustStart(Point dp) {
-        switch(dp.getDirec())
-        {
+        switch (dp.getDirec()) {
             case "top":
                 return new DirectedPoint(dp.getX(), dp.getY() + 1, dp.getDirec());
             case "bottom":
@@ -101,6 +103,8 @@ public class TileWorld {
                 return new DirectedPoint(dp.getX() - 1, dp.getY(), dp.getDirec());
             case "right":
                 return new DirectedPoint(dp.getX() + 1, dp.getY(), dp.getDirec());
+            default:
+                break;
         }
         return new DirectedPoint(dp.getX(), dp.getY(), "top");
     }
