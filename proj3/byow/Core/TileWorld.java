@@ -16,6 +16,22 @@ public class TileWorld {
     private Random random;
     private TERenderer teRenderer;
 
+    public TileWorld(long seed) {
+        random = new Random(seed);
+        width = RandomUtils.uniform(random, 100, 150);
+        height = RandomUtils.uniform(random, 80, 120);
+        world = new TETile[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                world[i][j] = Tileset.NOTHING;
+            }
+        }
+        rooms = new ArrayList<>();
+        halls = new ArrayList<>();
+        Point start = new Point(RandomUtils.uniform(random, height), RandomUtils.uniform(random, width));
+        createAreas(10, start);
+    }
+
     public TileWorld(long seed, TERenderer te) {
         random = new Random(seed);
         width = RandomUtils.uniform(random, 100, 150);
@@ -37,6 +53,7 @@ public class TileWorld {
         teRenderer.initialize(width, height);
         teRenderer.renderFrame(getTiles());
     }
+
     public Random getRandom() {
         return random;
     }
