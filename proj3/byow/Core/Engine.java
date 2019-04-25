@@ -48,13 +48,13 @@ public class Engine {
         String seed = "";
         for (int i = 0; i < input.length(); i++) {
             String temp = input.substring(i, i + 1);
-            if (!temp.equals("N")) {
-                if (!temp.equals("S")) {
+            if (!temp.equals("n") && !temp.equals("N")) {
+                if (!temp.equals("s") && !temp.equals("S")) {
                     seed = seed + temp;
                 }
             }
         }
-        int seedInt = Integer.parseInt(seed);
+        long seedInt = Long.parseLong(seed);
         TileWorld newWorld = new TileWorld(seedInt, ter);
         newWorld.renderWorld();
         TETile[][] finalWorldFrame = newWorld.getTiles();

@@ -16,7 +16,7 @@ public class TileWorld {
     private Random random;
     private TERenderer teRenderer;
 
-    public TileWorld(int seed, TERenderer te) {
+    public TileWorld(long seed, TERenderer te) {
         random = new Random(seed);
         width = RandomUtils.uniform(random, 100, 150);
         height = RandomUtils.uniform(random, 80, 120);
