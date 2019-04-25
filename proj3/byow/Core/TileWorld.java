@@ -5,7 +5,6 @@ import byow.TileEngine.TETile;
 import java.util.Random;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.Tileset;
-import java.util.Arrays;
 
 public class TileWorld {
     private ArrayList<Room> rooms; //might not be necessary
