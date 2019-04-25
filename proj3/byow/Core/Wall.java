@@ -40,7 +40,12 @@ public class Wall {
     }
 
     public Point removeWallRandom() {
-        int ran = RandomUtils.uniform(tileWorld.getRandom(), length);
+        int ran;
+        if (length > 0) {
+            ran = RandomUtils.uniform(tileWorld.getRandom(), length);
+        } else {
+            ran = 0;
+        }
         Point temp;
         if (isVert) {
             temp = new Point(startingx, startingy - ran);

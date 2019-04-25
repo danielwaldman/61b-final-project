@@ -35,8 +35,8 @@ public class TileWorld {
 
     public TileWorld(long seed, TERenderer te) {
         random = new Random(seed);
-        width = RandomUtils.uniform(random, 200, 300);
-        height = RandomUtils.uniform(random, 200, 300);
+        width = RandomUtils.uniform(random, 80, 100);
+        height = RandomUtils.uniform(random, 80, 100);
         world = new TETile[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -110,6 +110,7 @@ public class TileWorld {
         }
         return new DirectedPoint(dp.getX(), dp.getY(), "top");
     }
+
     public boolean isTaken(int x, int y) {
         if (isOutofIndex(x, y)) {
             return true;
