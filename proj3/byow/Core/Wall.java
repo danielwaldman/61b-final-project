@@ -57,6 +57,7 @@ public class Wall {
     }
 
     public void removeWallSeg(Point index) {
-        tileWorld.add(index, Tileset.FLOOR);
+        tileWorld.remove(index);
+        tileWorld.add(index, Tileset.TREE);
     }
 }

@@ -14,8 +14,28 @@ public class TileWorld {
     private TETile[][] world;
     private Random random;
     private TERenderer teRenderer;
+    private Avatar person;
 
-    public TileWorld(long seed) {
+    public class Avatar {
+        Point location;
+        TETile appearance;
+        TETile prevTile;
+
+        public Avatar(Point p) {
+            prevTile = get(p);
+            appearance = Tileset.MOUNTAIN;
+            location = p;
+            remove(location);
+            add(location, appearance);
+        }
+
+        public void move(Point z) {
+            remove(location);
+            add(location, prevTile);
+            new Avatar(z);
+        }
+    }
+    /*public TileWorld(long seed) {
         random = new Random(seed);
         width = RandomUtils.uniform(random, 100, 150);
         height = RandomUtils.uniform(random, 80, 120);
@@ -30,12 +50,12 @@ public class TileWorld {
         Point start = new Point(RandomUtils.uniform(random, height),
                 RandomUtils.uniform(random, width));
         createAreas(10, start);
-    }
+    }*/
 
     public TileWorld(long seed, TERenderer te) {
         random = new Random(seed);
-        width = RandomUtils.uniform(random, 80, 100);
-        height = RandomUtils.uniform(random, 80, 100);
+        width = RandomUtils.uniform(random, 100, 120);
+        height = RandomUtils.uniform(random, 50, 70);
         world = new TETile[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -47,7 +67,11 @@ public class TileWorld {
         halls = new ArrayList<>();
         Point start = new Point(RandomUtils.uniform(random, height),
                 RandomUtils.uniform(random, width));
-        createAreas(10, start);
+        createAreas(15, start);
+    }
+
+    public Avatar getAvatar() {
+        return person;
     }
 
     public void renderWorld() {
@@ -60,8 +84,14 @@ public class TileWorld {
     }
 
     public void add(Point p, TETile tile) {
-        if (!isOutofIndex(p.getX(), p.getY())) {
+        if (!isOutofIndex(p.getX(), p.getY()) && !isTaken(p.getX(), p.getY())) {
             world[p.getX()][p.getY()] = tile;
+        }
+    }
+
+    public void remove(Point p) {
+        if (!isOutofIndex(p.getX(), p.getY()) && isTaken(p.getX(), p.getY())) {
+            world[p.getX()][p.getY()] = Tileset.NOTHING;
         }
     }
 
@@ -69,6 +99,8 @@ public class TileWorld {
         //this is where we make a new indoor area
         //this is where we add that indoor area to indoorAreas
         Point nextStartingPoint = beginning;
+        add(nextStartingPoint, Tileset.LOCKED_DOOR);
+        person = new Avatar(nextStartingPoint);
         for (int i = 0; i < numAreas; i++) {
             if (i % 2 == 0) {
                 Room temp = new Room(nextStartingPoint, RandomUtils.poisson(random, 5),
@@ -80,10 +112,10 @@ public class TileWorld {
                 nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
             } else {
                 Hallway temp = null;
-                if (i % 4 == 1) {
-                    temp = new Hallway(nextStartingPoint, 1, RandomUtils.poisson(random, 5), this);
+                if (nextStartingPoint.getDirec().equals("top") || nextStartingPoint.getDirec().equals("bottom")) {
+                    temp = new Hallway(nextStartingPoint, 1, RandomUtils.uniform(random, 5, 12), this);
                 } else {
-                    temp = new Hallway(nextStartingPoint, RandomUtils.poisson(random, 5), 1, this);
+                    temp = new Hallway(nextStartingPoint, RandomUtils.uniform(random, 5, 12), 1, this);
                 }
                 //System.out.print(temp.getDirection());
                 //System.out.println(Arrays.toString(temp.getParams()));

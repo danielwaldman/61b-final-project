@@ -15,6 +15,7 @@ public class IndoorArea {
     private Point startPoint;
     private Point exitPoint;
     private String direction;
+    private boolean isHall;
 
     public IndoorArea(Point p, int length, int width, TileWorld tw) {
         direction = p.getDirec();
@@ -24,6 +25,7 @@ public class IndoorArea {
         xlength = length;
         ywidth = width;
         tileWorld = tw;
+        isHall = false;
     }
 
     public String getDirection() {
@@ -36,7 +38,14 @@ public class IndoorArea {
     }
 
     private void breakWall() {
-        int i = RandomUtils.uniform(tileWorld.getRandom(), 3);
+        int i = RandomUtils.uniform(tileWorld.getRandom(), 4);
+        if (isHall) {
+            if(getDirection().equals("left") || getDirection().equals("right")) {
+                i = RandomUtils.uniform(tileWorld.getRandom(), 2);
+            } else {
+                i = RandomUtils.uniform(tileWorld.getRandom(), 2, 4);
+            }
+        }
         Point removedIndex;
         switch (i) {
             case 0:
@@ -71,10 +80,20 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+        }
     }
 
     public void buildRightDown(int shift) {
@@ -86,10 +105,20 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+        }
     }
 
     public void buildLeftUp(int shift) {
@@ -101,10 +130,20 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+        }
     }
 
     public void buildLeftDown(int shift) {
@@ -116,11 +155,22 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
-                tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
+                        tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
+                    tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+        }
     }
 
     public void buildUpRight(int shift) {
@@ -132,10 +182,20 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + ywidth), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - 1), tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - 1, yStart - 1 + ywidth), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + xlength, yStart - 1 + ywidth), tileWorld);
+        }
     }
 
     public void buildUpLeft(int shift) {
@@ -147,10 +207,20 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + ywidth), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - 1), tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - xlength, yStart - 1 + ywidth), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + 1, yStart - 1 + ywidth), tileWorld);
+        }
     }
 
     public void buildDownRight(int shift) {
@@ -162,10 +232,20 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - 1, yStart), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + xlength, yStart), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - 1, yStart), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + xlength, yStart), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - 1, yStart + 1), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - 1, yStart - ywidth), tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - 1, yStart), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + xlength, yStart), tileWorld);
+        }
     }
 
 
@@ -178,11 +258,22 @@ public class IndoorArea {
                 }
             }
         }
-        top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
-        bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
-                tileWorld);
-        left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
-        right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+        if (isHall) {
+            if (getDirection().equals("left") || getDirection().equals("right")) {
+                top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
+                bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
+                        tileWorld);
+            } else {
+                left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
+                right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+            }
+        } else {
+            top = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart + 1), tileWorld);
+            bottom = new Wall(false, xlength + 2, new Point(xStart - xlength, yStart - ywidth),
+                    tileWorld);
+            left = new Wall(true, ywidth, new Point(xStart - xlength, yStart), tileWorld);
+            right = new Wall(true, ywidth, new Point(xStart + 1, yStart), tileWorld);
+        }
     }
 
     void methodTop(int drr, Point dp, int buildvert) {
@@ -231,6 +322,7 @@ public class IndoorArea {
             buildvert = RandomUtils.uniform(tileWorld.getRandom(), xlength - 1);
             buildhoriz = RandomUtils.uniform(tileWorld.getRandom(), ywidth - 1);
         } else {
+            isHall = true;
             buildvert = 0;
             buildhoriz = 0;
         }

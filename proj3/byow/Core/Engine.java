@@ -1,10 +1,12 @@
 package byow.Core;
 
 import byow.TileEngine.TETile;
-//import byow.TileEngine.TERenderer;
+import byow.TileEngine.TERenderer;
+import edu.princeton.cs.introcs.StdDraw;
+import byow.Core.TileWorld.Avatar;
 
 public class Engine {
-    //TERenderer ter = new TERenderer();
+    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
@@ -14,6 +16,52 @@ public class Engine {
      * including inputs from the main menu.
      */
     public void interactWithKeyboard() {
+        String seed = "";
+        boolean seedExists = false;
+        while (true) {
+            if (StdDraw.hasNextKeyTyped()) {
+                char c = StdDraw.nextKeyTyped();
+                target:
+                while (!seedExists) {
+                    switch (c) {
+                        case ('n'):
+                            break;
+                        case ('N'):
+                            break;
+                        case ('s'):
+                            interactWithInputString(seed);
+                            seedExists = true;
+                            c = StdDraw.nextKeyTyped();
+                            break target;
+                        case ('S'):
+                            interactWithInputString(seed);
+                            seedExists = true;
+                            c = StdDraw.nextKeyTyped();
+                            break target;
+                        default:
+                            seed = seed + c;
+                    }
+                }
+                switch(c) {
+                    case ('w'):
+                        break;
+                    case ('W'):
+                        break;
+                    case ('a'):
+                        break;
+                    case ('A'):
+                        break;
+                    case ('s'):
+                        break;
+                    case ('S'):
+                        break;
+                    case ('d'):
+                        break;
+                    case ('D'):
+                        break;
+                }
+            }
+        }
     }
 
     /**
@@ -45,18 +93,72 @@ public class Engine {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
         String seed = "";
+        int loc = 0;
         for (int i = 0; i < input.length(); i++) {
-            String temp = input.substring(i, i + 1);
-            if (!temp.equals("n") && !temp.equals("N")) {
-                if (!temp.equals("s") && !temp.equals("S")) {
+            char temp = input.charAt(i);
+            if (temp != ('N') && temp != ('n')) {
+                if (temp == ('S') || temp == ('s')) {
+                    loc = i + 1;
+                    break;
+                } else {
                     seed = seed + temp;
                 }
+            } else if (temp == ('l') || temp == ('L')) {
+                //load previous state
+                loc = i + 1;
+                break;
             }
         }
         long seedInt = Long.parseLong(seed);
-        TileWorld newWorld = new TileWorld(seedInt);
-        //TileWorld newWorld = new TileWorld(seedInt, ter);
-        //newWorld.renderWorld();
+        //TileWorld newWorld = new TileWorld(seedInt);
+        TileWorld newWorld = new TileWorld(seedInt, ter);
+        newWorld.renderWorld();
+        for (int x = loc; x < input.length(); x++) {
+            char temp = input.charAt(x);
+            Avatar tempA = newWorld.getAvatar();
+            Point locA = tempA.location;
+            switch (temp) {
+                case ('w'):
+                    tempA.move(new Point(locA.getX(), locA.getY() + 1));
+                    newWorld.renderWorld();
+                    break;
+                case ('W'):
+                    tempA.move(new Point(locA.getX(), locA.getY() + 1));
+                    newWorld.renderWorld();
+                    break;
+                case ('a'):
+                    tempA.move(new Point(locA.getX() - 1, locA.getY()));
+                    newWorld.renderWorld();
+                    break;
+                case ('A'):
+                    tempA.move(new Point(locA.getX() - 1, locA.getY()));
+                    newWorld.renderWorld();
+                    break;
+                case ('s'):
+                    tempA.move(new Point(locA.getX(), locA.getY() - 1));
+                    newWorld.renderWorld();
+                    break;
+                case ('S'):
+                    tempA.move(new Point(locA.getX(), locA.getY() - 1));
+                    newWorld.renderWorld();
+                    break;
+                case ('d'):
+                    tempA.move(new Point(locA.getX() + 1, locA.getY()));
+                    newWorld.renderWorld();
+                    break;
+                case ('D'):
+                    tempA.move(new Point(locA.getX() + 1, locA.getY()));
+                    newWorld.renderWorld();
+                    break;
+                case (':'):
+                    x += 1;
+                    char next = input.charAt(x);
+                    if (next == ('Q') || next == ('q')) {
+                        // do some save shit and quit
+                    }
+                    break;
+            }
+        }
         TETile[][] finalWorldFrame = newWorld.getTiles();
         return finalWorldFrame;
     }
