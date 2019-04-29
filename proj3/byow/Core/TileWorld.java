@@ -15,6 +15,7 @@ public class TileWorld {
     private Random random;
     private TERenderer teRenderer;
     private Avatar person;
+    private boolean notfirst;
 
     public class Avatar {
         Point location;
@@ -30,10 +31,15 @@ public class TileWorld {
         }
 
         public void move(Point z) {
-            remove(location);
-            add(location, prevTile);
-            new Avatar(z);
+            if (get(z).equals(Tileset.WALL) || get(z).equals(Tileset.NOTHING) || isOutofIndex(z.getX(), z.getY())) {
+                return;
+            } else {
+                remove(location);
+                add(location, prevTile);
+                person = new Avatar(z);
+            }
         }
+
     }
     /*public TileWorld(long seed) {
         random = new Random(seed);
@@ -52,6 +58,19 @@ public class TileWorld {
         createAreas(10, start);
     }*/
 
+
+    public TileWorld(TETile[][] temp, long seed, TERenderer te) {
+        random = new Random(seed);
+        world = temp;
+        width = temp[0].length;
+        height = temp.length;
+        teRenderer = te;
+        notfirst = false;
+        rooms = new ArrayList<>();
+        halls = new ArrayList<>();
+    }
+
+
     public TileWorld(long seed, TERenderer te) {
         random = new Random(seed);
         width = RandomUtils.uniform(random, 100, 120);
@@ -63,6 +82,7 @@ public class TileWorld {
             }
         }
         teRenderer = te;
+        notfirst = false;
         rooms = new ArrayList<>();
         halls = new ArrayList<>();
         Point start = new Point(RandomUtils.uniform(random, height),
@@ -75,10 +95,16 @@ public class TileWorld {
     }
 
     public void renderWorld() {
-        teRenderer.initialize(width, height);
+        if (!notfirst) {
+            teRenderer.initialize(width, height);
+            notfirst = true;
+        }
         teRenderer.renderFrame(getTiles());
     }
 
+    public void closeWindow() {
+        System.exit(0);
+    }
     public Random getRandom() {
         return random;
     }
