@@ -31,7 +31,8 @@ public class TileWorld {
         }
 
         public void move(Point z) {
-            if (isOutofIndex(z.getX(), z.getY()) || get(z).equals(Tileset.WALL) || get(z).equals(Tileset.NOTHING)) {
+            if (isOutofIndex(z.getX(), z.getY()) || get(z).equals(Tileset.WALL)
+                    || get(z).equals(Tileset.NOTHING)) {
                 return;
             } else {
                 remove(location);
@@ -171,10 +172,13 @@ public class TileWorld {
                 nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
             } else {
                 Hallway temp = null;
-                if (nextStartingPoint.getDirec().equals("top") || nextStartingPoint.getDirec().equals("bottom")) {
-                    temp = new Hallway(nextStartingPoint, 1, RandomUtils.uniform(random, 5, 12), this);
+                if (nextStartingPoint.getDirec().equals("top")
+                        || nextStartingPoint.getDirec().equals("bottom")) {
+                    temp = new Hallway(nextStartingPoint, 1, RandomUtils.uniform(random, 5, 12),
+                            this);
                 } else {
-                    temp = new Hallway(nextStartingPoint, RandomUtils.uniform(random, 5, 12), 1, this);
+                    temp = new Hallway(nextStartingPoint, RandomUtils.uniform(random, 5, 12), 1,
+                            this);
                 }
                 //System.out.print(temp.getDirection());
                 //System.out.println(Arrays.toString(temp.getParams()));

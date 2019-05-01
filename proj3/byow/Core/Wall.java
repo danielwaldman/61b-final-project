@@ -48,7 +48,7 @@ public class Wall {
         }
         Point temp;
         if (isVert) {
-            temp = new Point(startingx , startingy - ran - 1);
+            temp = new Point(startingx, startingy - ran - 1);
         } else {
             temp = new Point(startingx + ran + 1, startingy);
         }

@@ -5,7 +5,8 @@ import byow.TileEngine.TETile;
 import edu.princeton.cs.introcs.StdDraw;
 import byow.Core.TileWorld.Avatar;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Color;
 
 public class Engine {
     //TERenderer ter = new TERenderer();
@@ -34,6 +35,43 @@ public class Engine {
         TETile[][] world = null;
         boolean seedExists = false;
         boolean loadfile = false;
+        switch1(world, seed, seedExists, loadfile);
+        String all = seed;
+        while (seed.substring(0, 1).equals("N") || seed.substring(0, 1).equals("n")) {
+            seed = seed.substring(1);
+        }
+        while (seed.substring(seed.length() - 1).equals("s")
+                || seed.substring(seed.length() - 1).equals("S")) {
+            seed = seed.substring(0, seed.length() - 1);
+        }
+        System.out.println(seed);
+        String seed12 = "";
+        for (int i = 0; i < seed.length(); i++) {
+            char temp = seed.charAt(i);
+            if (temp != ('N') && temp != ('n')) {
+                if (temp == ('S') || temp == ('s')) {
+                    break;
+                } else {
+                    seed12 = seed12 + temp;
+                }
+            }
+        }
+        long seedInt = Long.parseLong(seed12);
+        TileWorld newWorld = new TileWorld(seedInt);
+        //TileWorld newWorld = new TileWorld(seedInt, ter);
+        if (loadfile) {
+            newWorld.removeAvatar();
+            String t = Main.loadAvatar();
+            String [] points = t.split("\\s+");
+            int x = Integer.parseInt(points[0]);
+            int y = Integer.parseInt(points[1]);
+            newWorld.addAvatar(new Point(x, y));
+        }
+        //newWorld.renderWorld();
+        switch2(newWorld, all, seed);
+    }
+
+    private void switch1(TETile[][] world, String seed, boolean seedExists, boolean loadfile) {
         target:
         while (!seedExists) {
             if (StdDraw.hasNextKeyTyped()) {
@@ -73,48 +111,19 @@ public class Engine {
                         break;
                     case ('Q'):
                         System.exit(0);
+                        break;
                     case ('q'):
                         System.exit(0);
+                        break;
                     default:
                         seed = seed + c;
                         show(seed);
                 }
             }
         }
-        String all = seed;
-        while (seed.substring(0, 1).equals("N") || seed.substring(0,1).equals("n")) {
-            seed = seed.substring(1);
-        }
-        while (seed.substring(seed.length() - 1).equals("s") || seed.substring(seed.length() - 1).equals("S")) {
-            seed = seed.substring(0, seed.length() - 1);
-        }
-        System.out.println(seed);
-        String seed12 = "";
-        for (int i = 0; i < seed.length(); i++) {
-            char temp = seed.charAt(i);
-            if (temp != ('N') && temp != ('n')) {
-                if (temp == ('S') || temp == ('s')) {
-                    break;
-                } else {
-                    seed12 = seed12 + temp;
-                }
-            }
-        }
-        long seedInt = Long.parseLong(seed12);
-        TileWorld newWorld = new TileWorld(seedInt);
-        //TileWorld newWorld = new TileWorld(seedInt, ter);
-        if (loadfile) {
-            newWorld.removeAvatar();
-            String t = Main.loadAvatar();
-            String [] points = t.split("\\s+");
-            int x = Integer.parseInt(points[0]);
-            int y = Integer.parseInt(points[1]);
-            newWorld.addAvatar(new Point(x, y));
-        }
-        //newWorld.renderWorld();
-         /*else {
-            TileWorld newWorld = new TileWorld(world, seedInt, ter);
-        } //figure out how to load previous state*/
+    }
+
+    private void switch2(TileWorld newWorld, String all, String seed) {
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 char c = StdDraw.nextKeyTyped();
@@ -155,7 +164,7 @@ public class Engine {
                         break;
                     case (':'):
                         while (true) {
-                            if(StdDraw.hasNextKeyTyped()) {
+                            if (StdDraw.hasNextKeyTyped()) {
                                 char next = StdDraw.nextKeyTyped();
                                 if (next == ('Q') || next == ('q')) {
                                     Main.setStored(all);
@@ -165,17 +174,21 @@ public class Engine {
                                 break;
                             }
                         }
+                        break;
+                    default:
+                        break;
                 }
                 seed = seed + c;
                 all = all + c;
             } else if (StdDraw.isMousePressed()) {
-                shows(newWorld.getType(newWorld.get(new Point((int)Math.round(StdDraw.mouseX()), (int)Math.round(StdDraw.mouseY())))), newWorld.getWidth(), newWorld.getHeight(),
-                    (int)Math.round(StdDraw.mouseX()), (int)Math.round(StdDraw.mouseY()));
+                shows(newWorld.getType(newWorld.get(new Point((int) Math.round(StdDraw.mouseX()),
+                                (int) Math.round(StdDraw.mouseY())))),
+                        newWorld.getWidth(), newWorld.getHeight(),
+                        (int) Math.round(StdDraw.mouseX()), (int) Math.round(StdDraw.mouseY()));
                 //newWorld.renderWorld();
             }
         }
     }
-
     /**
      * Method used for autograding and testing your code. The input string will be a series
      * of characters (for example, "n123sswwdasdassadwas", "n123sss:q", "lwww". The engine should
@@ -266,7 +279,9 @@ public class Engine {
                     if (next == ('Q') || next == ('q')) {
                         Main.setStored(input.substring(0, input.length() - 2));
                     }
-                    newWorld.closeWindow();
+                    //newWorld.closeWindow();
+                    break;
+                default:
                     break;
             }
         }
@@ -279,9 +294,9 @@ public class Engine {
         StdDraw.setFont(font);
         StdDraw.clear(Color.BLACK);
         StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(w/2, h/2, s);
-        StdDraw.text(w/2, h/2 - 5, Integer.toString(x));
-        StdDraw.text(w/2, h/2 - 10, Integer.toString(y));
+        StdDraw.text(w / 2, h / 2, s);
+        StdDraw.text(w / 2, h / 2 - 5, Integer.toString(x));
+        StdDraw.text(w / 2, h / 2 - 10, Integer.toString(y));
         StdDraw.show();
     }
 
