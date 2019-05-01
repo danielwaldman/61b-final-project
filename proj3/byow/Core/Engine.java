@@ -222,6 +222,7 @@ public class Engine {
         for (int i = 0; i < input.length(); i++) {
             char temp = input.charAt(i);
             if (temp == ('L') || temp == ('l')) {
+                Main.loadAvatar();
                 return interactWithInputString(Main.loadStored());
             } else if (temp != ('N') && temp != ('n')) {
                 if (temp == ('S') || temp == ('s')) {
@@ -277,6 +278,7 @@ public class Engine {
                     x += 1;
                     char next = input.charAt(x);
                     if (next == ('Q') || next == ('q')) {
+                        Main.storeAvatar(newWorld);
                         Main.setStored(input.substring(0, input.length() - 2));
                     }
                     //newWorld.closeWindow();
