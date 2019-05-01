@@ -3,7 +3,7 @@ package byow.Core;
 import java.util.ArrayList;
 import byow.TileEngine.TETile;
 import java.util.Random;
-import byow.TileEngine.TERenderer;
+//import byow.TileEngine.TERenderer;
 import byow.TileEngine.Tileset;
 
 public class TileWorld {
@@ -13,7 +13,7 @@ public class TileWorld {
     private int height;
     private TETile[][] world;
     private Random random;
-    private TERenderer teRenderer;
+    //private TERenderer teRenderer;
     private Avatar person;
     private boolean notfirst;
 
@@ -40,26 +40,35 @@ public class TileWorld {
             }
         }
 
+        public Point getPoint() {
+            return location;
+        }
+
+        public String getStringPoint() {
+            return "" + location.getX() + " " + location.getY();
+        }
+
     }
-    /*public TileWorld(long seed) {
+    public TileWorld(long seed) {
         random = new Random(seed);
-        width = RandomUtils.uniform(random, 100, 150);
-        height = RandomUtils.uniform(random, 80, 120);
+        width = RandomUtils.uniform(random, 60, 80);
+        height = RandomUtils.uniform(random, 100, 120);
         world = new TETile[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 world[i][j] = Tileset.NOTHING;
             }
         }
+        notfirst = false;
         rooms = new ArrayList<>();
         halls = new ArrayList<>();
         Point start = new Point(RandomUtils.uniform(random, height),
                 RandomUtils.uniform(random, width));
-        createAreas(10, start);
-    }*/
+        createAreas(RandomUtils.uniform(random, 12, 24), start);
+    }
 
 
-    public TileWorld(TETile[][] temp, long seed, TERenderer te) {
+    /*public TileWorld(TETile[][] temp, long seed, TERenderer te) {
         random = new Random(seed);
         world = temp;
         width = temp[0].length;
@@ -73,8 +82,10 @@ public class TileWorld {
 
     public TileWorld(long seed, TERenderer te) {
         random = new Random(seed);
-        width = RandomUtils.uniform(random, 100, 120);
-        height = RandomUtils.uniform(random, 50, 70);
+        width = RandomUtils.uniform(random, 60, 80);
+        height = RandomUtils.uniform(random, 100, 120);
+        System.out.println("width" + width);
+        System.out.println("height" + height);
         world = new TETile[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -87,24 +98,41 @@ public class TileWorld {
         halls = new ArrayList<>();
         Point start = new Point(RandomUtils.uniform(random, height),
                 RandomUtils.uniform(random, width));
-        createAreas(15, start);
+        createAreas(RandomUtils.uniform(random, 12, 24), start);
+    }*/
+
+    public void addAvatar(Point p) {
+        person = new Avatar(p);
     }
 
+    public void removeAvatar() {
+        remove(person.location);
+        add(person.location, person.prevTile);
+    }
     public Avatar getAvatar() {
         return person;
     }
 
-    public void renderWorld() {
+    /*public void renderWorld() {
         if (!notfirst) {
-            teRenderer.initialize(width, height);
+            teRenderer.initialize(height, width);
             notfirst = true;
         }
         teRenderer.renderFrame(getTiles());
+    }*/
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public void closeWindow() {
         System.exit(0);
     }
+
     public Random getRandom() {
         return random;
     }
@@ -121,16 +149,21 @@ public class TileWorld {
         }
     }
 
+
     public void createAreas(int numAreas, Point beginning) {
         //this is where we make a new indoor area
         //this is where we add that indoor area to indoorAreas
         Point nextStartingPoint = beginning;
-        add(nextStartingPoint, Tileset.LOCKED_DOOR);
-        person = new Avatar(nextStartingPoint);
         for (int i = 0; i < numAreas; i++) {
             if (i % 2 == 0) {
-                Room temp = new Room(nextStartingPoint, RandomUtils.poisson(random, 5),
-                        RandomUtils.poisson(random, 5), this);
+                Room temp;
+                if (i == 0) {
+                    temp = new Room(nextStartingPoint, RandomUtils.uniform(random, 2, 8),
+                            RandomUtils.uniform(random, 2, 8), this, true);
+                } else {
+                    temp = new Room(nextStartingPoint, RandomUtils.uniform(random, 2, 8),
+                            RandomUtils.uniform(random, 2, 8), this);
+                }
                 //System.out.print(temp.getDirection());
                 //System.out.println(Arrays.toString(temp.getParams()));
                 rooms.add(temp);
@@ -172,7 +205,9 @@ public class TileWorld {
         if (isOutofIndex(x, y)) {
             return true;
         }
-        if (!(world[x][y].equals(Tileset.NOTHING))) {
+        if (world[x][y].equals(Tileset.WALL)) {
+            return false;
+        } else if (!(world[x][y].equals(Tileset.NOTHING))) {
             return true;
         }
         return false;
@@ -200,6 +235,21 @@ public class TileWorld {
         return world[p.getX()][p.getY()];
     }
 
+    public String getType(TETile t) {
+        if (t.equals(Tileset.WALL)) {
+            return "Wall";
+        } else if (t.equals(Tileset.LOCKED_DOOR)) {
+            return "Starting Point";
+        } else if (t.equals(Tileset.FLOOR)) {
+            return "Floor";
+        } else if (t.equals(Tileset.MOUNTAIN)) {
+            return "Character";
+        } else if (t.equals(Tileset.TREE)) {
+            return "Portal";
+        } else {
+            return "Nothing";
+        }
+    }
     public TETile[][] getTiles() {
         return world;
     }

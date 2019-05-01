@@ -41,16 +41,16 @@ public class Wall {
 
     public Point removeWallRandom() {
         int ran;
-        if (length > 0) {
-            ran = RandomUtils.uniform(tileWorld.getRandom(), length);
+        if (length > 1) {
+            ran = RandomUtils.uniform(tileWorld.getRandom(), length - 1);
         } else {
             ran = 0;
         }
         Point temp;
         if (isVert) {
-            temp = new Point(startingx, startingy - ran);
+            temp = new Point(startingx , startingy - ran - 1);
         } else {
-            temp = new Point(startingx + ran, startingy);
+            temp = new Point(startingx + ran + 1, startingy);
         }
         removeWallSeg(temp);
         return temp;
@@ -58,6 +58,7 @@ public class Wall {
 
     public void removeWallSeg(Point index) {
         tileWorld.remove(index);
-        tileWorld.add(index, Tileset.TREE);
+        //System.out.println("x-coord: " + index.getX() + "y-coord: " + index.getY());
+        tileWorld.add(index, Tileset.FLOOR);
     }
 }
