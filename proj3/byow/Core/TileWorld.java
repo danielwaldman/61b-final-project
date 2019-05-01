@@ -31,7 +31,7 @@ public class TileWorld {
         }
 
         public void move(Point z) {
-            if (get(z).equals(Tileset.WALL) || get(z).equals(Tileset.NOTHING) || isOutofIndex(z.getX(), z.getY())) {
+            if (isOutofIndex(z.getX(), z.getY()) || get(z).equals(Tileset.WALL) || get(z).equals(Tileset.NOTHING)) {
                 return;
             } else {
                 remove(location);
