@@ -160,7 +160,7 @@ public class Engine {
                                 if (next == ('Q') || next == ('q')) {
                                     Main.setStored(all);
                                     Main.storeAvatar(newWorld);
-                                    newWorld.closeWindow();
+                                    //newWorld.closeWindow();
                                 }
                                 break;
                             }
