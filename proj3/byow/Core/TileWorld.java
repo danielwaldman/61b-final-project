@@ -3,7 +3,7 @@ package byow.Core;
 import java.util.ArrayList;
 import byow.TileEngine.TETile;
 import java.util.Random;
-//import byow.TileEngine.TERenderer;
+import byow.TileEngine.TERenderer;
 import byow.TileEngine.Tileset;
 
 public class TileWorld {
@@ -13,7 +13,7 @@ public class TileWorld {
     private int height;
     private TETile[][] world;
     private Random random;
-    //private TERenderer teRenderer;
+    private TERenderer teRenderer;
     private Avatar person;
     private boolean notfirst;
 
@@ -65,11 +65,11 @@ public class TileWorld {
         halls = new ArrayList<>();
         Point start = new Point(RandomUtils.uniform(random, height),
                 RandomUtils.uniform(random, width));
-        createAreas(RandomUtils.uniform(random, 12, 24), start);
+        createAreas(RandomUtils.uniform(random, 15, 24), start);
     }
 
 
-  /* public TileWorld(TETile[][] temp, long seed, TERenderer te) {
+   public TileWorld(TETile[][] temp, long seed, TERenderer te) {
        random = new Random(seed);
        world = temp;
        width = temp[0].length;
@@ -85,8 +85,6 @@ public class TileWorld {
        random = new Random(seed);
        width = RandomUtils.uniform(random, 60, 80);
        height = RandomUtils.uniform(random, 100, 120);
-       System.out.println("width" + width);
-       System.out.println("height" + height);
        world = new TETile[height][width];
        for (int i = 0; i < height; i++) {
            for (int j = 0; j < width; j++) {
@@ -100,7 +98,7 @@ public class TileWorld {
        Point start = new Point(RandomUtils.uniform(random, height),
                RandomUtils.uniform(random, width));
        createAreas(RandomUtils.uniform(random, 12, 24), start);
-   }*/
+   }
 
     public void addAvatar(Point p) {
         person = new Avatar(p);
@@ -114,13 +112,13 @@ public class TileWorld {
         return person;
     }
 
-   /*public void renderWorld() {
+   public void renderWorld() {
        if (!notfirst) {
            teRenderer.initialize(height, width);
            notfirst = true;
        }
        teRenderer.renderFrame(getTiles());
-   }*/
+   }
 
     public int getWidth() {
         return width;
@@ -169,7 +167,9 @@ public class TileWorld {
                 //System.out.println(Arrays.toString(temp.getParams()));
                 rooms.add(temp);
                 int ran = RandomUtils.uniform(random, rooms.size());
-                nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
+                if (i + 1 != numAreas) {
+                    nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
+                }
             } else {
                 Hallway temp = null;
                 if (nextStartingPoint.getDirec().equals("top")
@@ -184,7 +184,9 @@ public class TileWorld {
                 //System.out.println(Arrays.toString(temp.getParams()));
                 halls.add(temp);
                 int ran = RandomUtils.uniform(random, halls.size());
-                nextStartingPoint = adjustStart(halls.get(ran).getExitPoint());
+                if (i + 1 != numAreas) {
+                    nextStartingPoint = adjustStart(halls.get(ran).getExitPoint());
+                }
             }
         }
     }

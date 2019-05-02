@@ -1,7 +1,7 @@
 package byow.Core;
 
 import byow.TileEngine.TETile;
-//import byow.TileEngine.TERenderer;
+import byow.TileEngine.TERenderer;
 import edu.princeton.cs.introcs.StdDraw;
 import byow.Core.TileWorld.Avatar;
 
@@ -9,7 +9,7 @@ import java.awt.Font;
 import java.awt.Color;
 
 public class Engine {
-    //TERenderer ter = new TERenderer();
+    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
@@ -53,7 +53,8 @@ public class Engine {
         StdDraw.text(WIDTH / 2, HEIGHT * 2 / 3, "CS61B: THE GAME");
         StdDraw.text(WIDTH / 2, HEIGHT / 2, "New Game (N)");
         StdDraw.text(WIDTH / 2, HEIGHT / 2 - 2, "Load Game (L)");
-        StdDraw.text(WIDTH / 2, HEIGHT / 2 - 4, "Quit (Q)");
+        StdDraw.text(WIDTH / 2, HEIGHT / 2 - 4, "Replay (R)");
+        StdDraw.text(WIDTH / 2, HEIGHT / 2 - 6, "Quit (Q)");
         StdDraw.enableDoubleBuffering();
         TETile[][] world = null;
         boolean seedExists = false;
@@ -69,7 +70,6 @@ public class Engine {
                 || seed.substring(seed.length() - 1).equals("S")) {
             seed = seed.substring(0, seed.length() - 1);
         }
-        System.out.println(seed);
         String seed12 = "";
         for (int i = 0; i < seed.length(); i++) {
             char temp = seed.charAt(i);
@@ -79,11 +79,14 @@ public class Engine {
                 } else {
                     seed12 = seed12 + temp;
                 }
+            } else {
+                show("Enter seed");
             }
         }
         long seedInt = Long.parseLong(seed12);
-        TileWorld newWorld = new TileWorld(seedInt);
-        //TileWorld newWorld = new TileWorld(seedInt, ter);
+        System.out.println(seedInt);
+        //TileWorld newWorld = new TileWorld(seedInt);
+        TileWorld newWorld = new TileWorld(seedInt, ter);
         if (loadfile) {
             newWorld.removeAvatar();
             String t = Main.loadAvatar();
@@ -92,7 +95,7 @@ public class Engine {
             int y = Integer.parseInt(points[1]);
             newWorld.addAvatar(new Point(x, y));
         }
-        //newWorld.renderWorld();
+        newWorld.renderWorld();
         switch2(newWorld, all, seed);
     }
 
@@ -103,46 +106,78 @@ public class Engine {
                 char c = StdDraw.nextKeyTyped();
                 switch (c) {
                     case ('l'):
-                        world = interactWithInputString(Main.loadStored());
+                        world = interactWithInputStringInstant(Main.loadStored());
                         seed = Main.loadStored();
                         seedExists = true;
                         loadfile = true;
                         break target;
                     case ('L'):
-                        world = interactWithInputString(Main.loadStored());
+                        world = interactWithInputStringInstant(Main.loadStored());
                         seed = Main.loadStored();
                         seedExists = true;
                         loadfile = true;
                         break target;
                     case ('n'):
                         seed = "n" + seed;
-                        show(seed);
+                        show("Enter seed: " + seed);
                         break;
                     case ('N'):
                         seed = "N" + seed;
-                        show(seed);
+                        show("Enter seed: " + seed);
                         break;
                     case ('s'):
                         interactWithInputString(seed);
                         seedExists = true;
                         seed = seed + "s";
-                        show(seed);
+                        show("Enter seed: " + seed);
                         break;
                     case ('S'):
                         interactWithInputString(seed);
                         seedExists = true;
                         seed = seed + "s";
-                        show(seed);
+                        show("Enter seed: " + seed);
                         break;
+                    case ('R'):
+                        world = interactWithInputString(Main.loadStored());
+                        seed = Main.loadStored();
+                        seedExists = true;
+                        loadfile = true;
+                        break target;
+                    case ('r'):
+                        world = interactWithInputString(Main.loadStored());
+                        seed = Main.loadStored();
+                        seedExists = true;
+                        loadfile = true;
+                        break target;
                     case ('Q'):
-                        //System.exit(0);
+                        System.exit(0);
                         break;
                     case ('q'):
-                        //System.exit(0);
+                        System.exit(0);
                         break;
                     default:
                         seed = seed + c;
-                        show(seed);
+                        show("Enter seed: " + seed);
+                }
+            } if (StdDraw.isMousePressed()) {
+                int x = (int)StdDraw.mouseX();
+                int y = (int)StdDraw.mouseY();
+                if (x >= 30 && x <= 50) {
+                    if (y == 15) {
+                        show("Enter seed: " + seed);
+                    } else if (y == 13) {
+                        world = interactWithInputStringInstant(Main.loadStored());
+                        seed = Main.loadStored();
+                        seedExists = true;
+                        loadfile = true;
+                    } else if (y == 11) {
+                        world = interactWithInputString(Main.loadStored());
+                        seed = Main.loadStored();
+                        seedExists = true;
+                        loadfile = true;
+                    } else if (y == 9) {
+                        System.exit(0);
+                    }
                 }
             }
         }
@@ -158,35 +193,35 @@ public class Engine {
                 switch (c) {
                     case ('w'):
                         tempA.move(new Point(locA.getX(), locA.getY() + 1));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('W'):
                         tempA.move(new Point(locA.getX(), locA.getY() + 1));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('a'):
                         tempA.move(new Point(locA.getX() - 1, locA.getY()));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('A'):
                         tempA.move(new Point(locA.getX() - 1, locA.getY()));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('s'):
                         tempA.move(new Point(locA.getX(), locA.getY() - 1));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('S'):
                         tempA.move(new Point(locA.getX(), locA.getY() - 1));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('d'):
                         tempA.move(new Point(locA.getX() + 1, locA.getY()));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case ('D'):
                         tempA.move(new Point(locA.getX() + 1, locA.getY()));
-                        //newWorld.renderWorld();
+                        newWorld.renderWorld();
                         break;
                     case (':'):
                         while (true) {
@@ -195,7 +230,7 @@ public class Engine {
                                 if (next == ('Q') || next == ('q')) {
                                     Main.setStored(all);
                                     Main.storeAvatar(newWorld);
-                                    //newWorld.closeWindow();
+                                    newWorld.closeWindow();
                                 }
                                 break;
                             }
@@ -207,11 +242,13 @@ public class Engine {
                 seed = seed + c;
                 all = all + c;
             } else if (StdDraw.isMousePressed()) {
-                shows(newWorld.getType(newWorld.get(new Point((int) Math.round(StdDraw.mouseX()),
-                                (int) Math.round(StdDraw.mouseY())))),
-                        newWorld.getWidth(), newWorld.getHeight(),
-                        (int) Math.round(StdDraw.mouseX()), (int) Math.round(StdDraw.mouseY()));
-                //newWorld.renderWorld();
+                if (!newWorld.isOutofIndex((int)StdDraw.mouseX(), (int)StdDraw.mouseY())) {
+                    shows(newWorld.getType(newWorld.get(new Point((int) Math.round(StdDraw.mouseX()),
+                                    (int) Math.round(StdDraw.mouseY())))),
+                            newWorld.getWidth(), newWorld.getHeight(),
+                            (int) Math.round(StdDraw.mouseX()), (int) Math.round(StdDraw.mouseY()));
+                    newWorld.renderWorld();
+                }
             }
         }
     }
@@ -259,9 +296,9 @@ public class Engine {
             }
         }
         long seedInt = Long.parseLong(seed);
-        TileWorld newWorld = new TileWorld(seedInt);
-        //TileWorld newWorld = new TileWorld(seedInt, ter);
-        //newWorld.renderWorld();
+        //TileWorld newWorld = new TileWorld(seedInt);
+        TileWorld newWorld = new TileWorld(seedInt, ter);
+        newWorld.renderWorld();
         for (int x = loc; x < input.length(); x++) {
             char temp = input.charAt(x);
             Avatar tempA = newWorld.getAvatar();
@@ -269,35 +306,35 @@ public class Engine {
             switch (temp) {
                 case ('w'):
                     tempA.move(new Point(locA.getX(), locA.getY() + 1));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('W'):
                     tempA.move(new Point(locA.getX(), locA.getY() + 1));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('a'):
                     tempA.move(new Point(locA.getX() - 1, locA.getY()));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('A'):
                     tempA.move(new Point(locA.getX() - 1, locA.getY()));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('s'):
                     tempA.move(new Point(locA.getX(), locA.getY() - 1));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('S'):
                     tempA.move(new Point(locA.getX(), locA.getY() - 1));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('d'):
                     tempA.move(new Point(locA.getX() + 1, locA.getY()));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case ('D'):
                     tempA.move(new Point(locA.getX() + 1, locA.getY()));
-                    //newWorld.renderWorld();
+                    newWorld.renderWorld();
                     break;
                 case (':'):
                     x += 1;
@@ -305,7 +342,77 @@ public class Engine {
                     if (next == ('Q') || next == ('q')) {
                         Main.setStored(input.substring(0, input.length() - 2));
                     }
-                    //newWorld.closeWindow();
+                    newWorld.closeWindow();
+                    break;
+                default:
+                    break;
+            }
+        }
+        TETile[][] finalWorldFrame = newWorld.getTiles();
+        return finalWorldFrame;
+    }
+
+    public TETile[][] interactWithInputStringInstant(String input) {
+        // passed in as an argument, and return a 2D tile representation of the
+        // world that would have been drawn if the same inputs had been given
+        // to interactWithKeyboard().
+        //
+        // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
+        // that works for many different input types.
+        String seed = "";
+        int loc = 0;
+        for (int i = 0; i < input.length(); i++) {
+            char temp = input.charAt(i);
+            if (temp == ('L') || temp == ('l')) {
+                return interactWithInputString(Main.loadStored() + input.substring(1));
+            } else if (temp != ('N') && temp != ('n')) {
+                if (temp == ('S') || temp == ('s')) {
+                    loc = i + 1;
+                    break;
+                } else {
+                    seed = seed + temp;
+                }
+            }
+        }
+        long seedInt = Long.parseLong(seed);
+        //TileWorld newWorld = new TileWorld(seedInt);
+        TileWorld newWorld = new TileWorld(seedInt, ter);
+        for (int x = loc; x < input.length(); x++) {
+            char temp = input.charAt(x);
+            Avatar tempA = newWorld.getAvatar();
+            Point locA = tempA.location;
+            switch (temp) {
+                case ('w'):
+                    tempA.move(new Point(locA.getX(), locA.getY() + 1));
+                    break;
+                case ('W'):
+                    tempA.move(new Point(locA.getX(), locA.getY() + 1));
+                    break;
+                case ('a'):
+                    tempA.move(new Point(locA.getX() - 1, locA.getY()));
+                    break;
+                case ('A'):
+                    tempA.move(new Point(locA.getX() - 1, locA.getY()));
+                    break;
+                case ('s'):
+                    tempA.move(new Point(locA.getX(), locA.getY() - 1));
+                    break;
+                case ('S'):
+                    tempA.move(new Point(locA.getX(), locA.getY() - 1));
+                    break;
+                case ('d'):
+                    tempA.move(new Point(locA.getX() + 1, locA.getY()));
+                    break;
+                case ('D'):
+                    tempA.move(new Point(locA.getX() + 1, locA.getY()));
+                    break;
+                case (':'):
+                    x += 1;
+                    char next = input.charAt(x);
+                    if (next == ('Q') || next == ('q')) {
+                        Main.setStored(input.substring(0, input.length() - 2));
+                    }
+                    newWorld.closeWindow();
                     break;
                 default:
                     break;

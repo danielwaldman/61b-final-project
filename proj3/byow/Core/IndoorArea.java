@@ -279,7 +279,8 @@ public class IndoorArea {
     public void build(Point dp) {
         String d = dp.getDirec();
         if (d == null) {
-            d = "top";
+            String[] directions = {"top", "bottom", "left", "right"};
+            d = directions[RandomUtils.uniform(tileWorld.getRandom(), 4)];
         }
         int buildvert, buildhoriz;
         if (xlength > 1 && ywidth > 1) {
