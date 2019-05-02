@@ -2,6 +2,7 @@ package byow.Core;
 
 import java.util.ArrayList;
 import byow.TileEngine.TETile;
+
 import java.util.Random;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.Tileset;
@@ -167,7 +168,7 @@ public class TileWorld {
                 //System.out.println(Arrays.toString(temp.getParams()));
                 rooms.add(temp);
                 int ran = RandomUtils.uniform(random, rooms.size());
-                if (i + 1 != numAreas) {
+                if (i + 2 != numAreas) {
                     nextStartingPoint = adjustStart(rooms.get(ran).getExitPoint());
                 }
             } else {
@@ -184,7 +185,7 @@ public class TileWorld {
                 //System.out.println(Arrays.toString(temp.getParams()));
                 halls.add(temp);
                 int ran = RandomUtils.uniform(random, halls.size());
-                if (i + 1 != numAreas) {
+                if (i + 2 != numAreas) {
                     nextStartingPoint = adjustStart(halls.get(ran).getExitPoint());
                 }
             }
@@ -194,12 +195,16 @@ public class TileWorld {
     public DirectedPoint adjustStart(Point dp) {
         switch (dp.getDirec()) {
             case "top":
+                add(dp, Tileset.WALL);
                 return new DirectedPoint(dp.getX(), dp.getY() + 1, dp.getDirec());
             case "bottom":
+                add(dp, Tileset.WALL);
                 return new DirectedPoint(dp.getX(), dp.getY() - 1, dp.getDirec());
             case "left":
+                add(dp, Tileset.WALL);
                 return new DirectedPoint(dp.getX() - 1, dp.getY(), dp.getDirec());
             case "right":
+                add(dp, Tileset.WALL);
                 return new DirectedPoint(dp.getX() + 1, dp.getY(), dp.getDirec());
             default:
                 break;
@@ -250,8 +255,6 @@ public class TileWorld {
             return "Floor";
         } else if (t.equals(Tileset.MOUNTAIN)) {
             return "Character";
-        } else if (t.equals(Tileset.TREE)) {
-            return "Portal";
         } else {
             return "Nothing";
         }

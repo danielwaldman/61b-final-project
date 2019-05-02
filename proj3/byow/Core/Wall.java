@@ -58,7 +58,7 @@ public class Wall {
 
     public void removeWallSeg(Point index) {
         tileWorld.remove(index);
-        //System.out.println("x-coord: " + index.getX() + "y-coord: " + index.getY());
+        System.out.println("x-coord: " + index.getX() + "y-coord: " + index.getY());
         tileWorld.add(index, Tileset.FLOOR);
     }
 }
