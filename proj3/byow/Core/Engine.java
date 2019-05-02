@@ -85,7 +85,6 @@ public class Engine {
             }
         }
         long seedInt = Long.parseLong(seed12);
-        System.out.println(seedInt);
         //TileWorld newWorld = new TileWorld(seedInt);
         TileWorld newWorld = new TileWorld(seedInt, ter);
         if (loadfile) {
