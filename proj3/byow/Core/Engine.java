@@ -44,7 +44,7 @@ public class Engine {
      */
     public void interactWithKeyboard() {
         String seed = "";
-        StdDraw.setCanvasSize(this.WIDTH * 16, this.HEIGHT * 16);
+        StdDraw.setCanvasSize(this.WIDTH * 24, this.HEIGHT * 28);
         Font font = new Font("Monaco", Font.BOLD, 30);
         StdDraw.setFont(font);
         StdDraw.setXscale(0, WIDTH);
