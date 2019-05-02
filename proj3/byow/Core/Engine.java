@@ -14,6 +14,29 @@ public class Engine {
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
 
+    private class Container {
+        TETile[][] tiles;
+        TileWorld t;
+        String s;
+        String a;
+        boolean sE;
+        boolean lF;
+
+        Container(TETile[][] t, String q, boolean b, boolean c) {
+            tiles = t;
+            s = q;
+            sE = b;
+            lF = c;
+        }
+
+        public String getS() {
+            return s;
+        }
+
+        public boolean getlF() {
+            return lF;
+        }
+    }
     /**
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
@@ -35,7 +58,9 @@ public class Engine {
         TETile[][] world = null;
         boolean seedExists = false;
         boolean loadfile = false;
-        switch1(world, seed, seedExists, loadfile);
+        Container tempp = switch1(world, seed, seedExists, loadfile);
+        seed = tempp.getS();
+        loadfile = tempp.getlF();
         String all = seed;
         while (seed.substring(0, 1).equals("N") || seed.substring(0, 1).equals("n")) {
             seed = seed.substring(1);
@@ -71,7 +96,7 @@ public class Engine {
         switch2(newWorld, all, seed);
     }
 
-    private void switch1(TETile[][] world, String seed, boolean seedExists, boolean loadfile) {
+    private Container switch1(TETile[][] world, String seed, boolean seedExists, boolean loadfile) {
         target:
         while (!seedExists) {
             if (StdDraw.hasNextKeyTyped()) {
@@ -110,10 +135,10 @@ public class Engine {
                         show(seed);
                         break;
                     case ('Q'):
-                        System.exit(0);
+                        //System.exit(0);
                         break;
                     case ('q'):
-                        System.exit(0);
+                        //System.exit(0);
                         break;
                     default:
                         seed = seed + c;
@@ -121,6 +146,7 @@ public class Engine {
                 }
             }
         }
+        return new Container(world, seed, seedExists, loadfile);
     }
 
     private void switch2(TileWorld newWorld, String all, String seed) {
@@ -222,8 +248,7 @@ public class Engine {
         for (int i = 0; i < input.length(); i++) {
             char temp = input.charAt(i);
             if (temp == ('L') || temp == ('l')) {
-                Main.loadAvatar();
-                return interactWithInputString(Main.loadStored());
+                return interactWithInputString(Main.loadStored() + input.substring(1));
             } else if (temp != ('N') && temp != ('n')) {
                 if (temp == ('S') || temp == ('s')) {
                     loc = i + 1;
@@ -278,7 +303,6 @@ public class Engine {
                     x += 1;
                     char next = input.charAt(x);
                     if (next == ('Q') || next == ('q')) {
-                        Main.storeAvatar(newWorld);
                         Main.setStored(input.substring(0, input.length() - 2));
                     }
                     //newWorld.closeWindow();
@@ -314,3 +338,4 @@ public class Engine {
         StdDraw.show();
     }
 }
+
